@@ -1,12 +1,34 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Header from "@/components/Header";
+import Home from "@/pages/Home";
+import Catalog from "@/pages/Catalog";
+import CoursePage from "@/pages/CoursePage";
+import Dashboard from "@/pages/Dashboard";
+import Profile from "@/pages/Profile";
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState("home");
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+
+  const handleNavigate = (page: string, courseId?: string) => {
+    setCurrentPage(page);
+    if (courseId) {
+      setSelectedCourseId(courseId);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header onNavigate={handleNavigate} currentPage={currentPage} />
+      
+      {currentPage === "home" && <Home onNavigate={handleNavigate} />}
+      {currentPage === "catalog" && <Catalog onNavigate={handleNavigate} />}
+      {currentPage === "course" && selectedCourseId && (
+        <CoursePage courseId={selectedCourseId} onNavigate={handleNavigate} />
+      )}
+      {currentPage === "dashboard" && <Dashboard onNavigate={handleNavigate} />}
+      {currentPage === "profile" && <Profile />}
     </div>
   );
 };
